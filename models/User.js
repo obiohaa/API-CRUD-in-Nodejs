@@ -34,7 +34,7 @@ UserSchema.pre('save', async function(){
 
 //mongoose instance of model for JWT sign
 UserSchema.methods.createJWT = function() {
-    return jwt.sign({nameId: this._id, name: this.name}, process.env.JWT_SECRET , {expiresIn: process.env.JWT_LIFESPAN})
+    return jwt.sign({userId: this._id, name: this.name}, process.env.JWT_SECRET , {expiresIn: process.env.JWT_LIFESPAN})
 }
 
 //mongoose instance of model for encrypted password 
