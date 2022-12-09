@@ -43,4 +43,4 @@ UserSchema.methods.comparePassword = async function(inputPassword){
     return isMatch
 }
 
-module.exports = mongoose.model('user', UserSchema)
+module.exports = mongoose.model('User', UserSchema)
