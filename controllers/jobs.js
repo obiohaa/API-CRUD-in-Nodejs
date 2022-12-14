@@ -8,10 +8,11 @@ const getAllJobs = async (req, res) => {
 }
 
 const getJob = async (req, res) => {
+    //Nested destructuring
     const {user: {userId}, params:{id: jobId}} = req
     const getThatJob = await Job.findOne({_id: jobId, createdBy: userId})
     if(!getThatJob){
-        throw new NotFoundError('No job with found')
+        throw new NotFoundError('No job with this user is found')
     }
     res.status(StatusCodes.OK).json({getThatJob})
 }
@@ -24,11 +25,26 @@ const createJob = async (req, res) => {
 
 
 const updateJob = async (req, res) => {
-    res.send('update jobs')
+    //Nested destructuring
+    const { body: {company, position}, user: {userId}, params: {id:jobId} } = req
+
+    if (company === '' || position === ''){
+        throw new BadRequestError('Company or Position fields cannot be empty')
+    }
+    const updateJob = await Job.findByIdAndUpdate({_id: jobId, createdBy: userId}, req.body, {new: true, runValidator: true})
+    if(!updateJob){
+        throw new NotFoundError('No job found to update')
+    }
+    res.status(StatusCodes.OK).json({updateJob})
 }
 
 const deleteJob = async (req, res) => {
-    res.send('delete jobs')
+    const {user: {userId}, params:{id: jobId}} = req
+    const deleteJob = await Job.findByIdAndDelete({_id:jobId, createdBy:userId})
+    if(!deleteJob){
+        throw new NotFoundError('this user does not exist')
+    }
+    res.status(StatusCodes.OK).send()
 }
 
 module.exports = {

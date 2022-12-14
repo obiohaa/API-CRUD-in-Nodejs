@@ -1,11 +1,11 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const { unauthenticatedError } = require('../errors/unauthenticated')
+const { UnauthenticatedError } = require('../errors/unauthenticated')
 
 const Auth = (req, res, next) => {
     const authHeader = req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer')){
-        throw new unauthenticatedError('Authentication Invalid')
+        throw new UnauthenticatedError('Authentication Invalid')
     }
     const token = authHeader.split(' ')[1]
     try {
@@ -18,8 +18,8 @@ const Auth = (req, res, next) => {
         //Or this, 
         req.user = {userId: payload.userId, name: payload.name}
         next()
-    } catch(error){
-        throw new unauthenticatedError('Authentication Invalid')
+    } catch (error) {
+        throw new UnauthenticatedError('Authentication Invalid')
     }
 }
 
