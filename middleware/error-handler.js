@@ -24,10 +24,15 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.msg = `Duplicate value entered for ${Object.keys(err.keyValue)} field, please choose another value`
     customError.statusCode = 400
   }
-  //this shows the internal server error for investigation uncomment to see error details.
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
 
-  // return res.status(customError.statusCode).json({msg: customError.msg})
+  if(err.name === 'CastError'){
+    customError.msg = `The id ${err.value} is not found`
+    customError.statusCode = 404
+  }
+  //this shows the internal server error for investigation uncomment to see error details.
+  // return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
+
+  return res.status(customError.statusCode).json({msg: customError.msg})
 
 }
 
